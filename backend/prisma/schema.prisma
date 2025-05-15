@@ -42,7 +42,6 @@ enum TaskStatus {
 }
 
 enum TaskPriority {
-  URGENTE
   ALTA
   MEDIA
   BAIXA
