@@ -32,6 +32,8 @@ model Task {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   dueDate     DateTime
+  startDate   DateTime     @default(now())
+  endDate     DateTime     @default(now())
   userId      String
   user        User         @relation(fields: [userId], references: [id])
 }
