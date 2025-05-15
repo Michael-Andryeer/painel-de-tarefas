@@ -8,6 +8,7 @@ import {
   Body,
   HttpCode,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create.task.dto';
@@ -20,19 +21,19 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
-  @Get('user/:userId')
-  async getTasksByUserId(
-    @Param('userId') userId: string,
-  ): Promise<TaskResponseDto[]> {
+  @Get()
+  async getTasksByUserId(@Req() req): Promise<TaskResponseDto[]> {
+    const userId = req.user.id; // Obtém o userId do token JWT
     return this.taskService.getTasksByUserId(userId);
   }
 
-  @Post('user/:userId')
+  @Post()
   async createTask(
-    @Param('userId') userId: string,
+    @Req() req,
     @Body() dto: CreateTaskDto,
   ): Promise<TaskResponseDto> {
-    return this.taskService.createTask(userId, dto);
+    const userId = req.user.id; // Obtém o userId do token JWT
+    return this.taskService.createTask({ ...dto, userId });
   }
 
   @Patch(':taskId')

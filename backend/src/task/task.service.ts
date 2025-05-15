@@ -17,9 +17,18 @@ export class TaskService {
     return tasks;
   }
 
-  createTask(userId: string, dto: CreateTaskDto): Promise<TaskResponseDto> {
+  async createTask(
+    data: CreateTaskDto & { userId: string },
+  ): Promise<TaskResponseDto> {
+    const { userId, ...taskData } = data;
+
     return prisma.task.create({
-      data: { ...dto, userId },
+      data: {
+        ...taskData,
+        user: {
+          connect: { id: userId },
+        },
+      },
     });
   }
 
