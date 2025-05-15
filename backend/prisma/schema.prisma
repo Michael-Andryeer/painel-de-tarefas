@@ -47,4 +47,5 @@ enum TaskPriority {
   ALTA
   MEDIA
   BAIXA
+  URGENTE
 }

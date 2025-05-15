@@ -3,7 +3,7 @@ export class TaskResponseDto {
   title: string;
   description: string;
   status: 'PENDENTE' | 'CONCLUIDO';
-  priority: 'ALTA' | 'MEDIA' | 'BAIXA';
+  priority: 'ALTA' | 'MEDIA' | 'BAIXA' | 'URGENTE';
   dueDate: Date;
   createdAt: Date;
   updatedAt: Date;

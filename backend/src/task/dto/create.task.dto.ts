@@ -1,4 +1,5 @@
 import { IsString, IsNotEmpty, IsEnum, IsDateString } from 'class-validator';
+import { TaskPriority, TaskStatus } from '@prisma/client'; // Importe o enum gerado pelo Prisma
 
 export class CreateTaskDto {
   @IsString()
@@ -9,11 +10,11 @@ export class CreateTaskDto {
   @IsNotEmpty()
   description: string;
 
-  @IsEnum(['PENDENTE', 'CONCLUIDO'])
-  status: 'PENDENTE' | 'CONCLUIDO';
+  @IsEnum(TaskStatus)
+  status: TaskStatus;
 
-  @IsEnum(['ALTA', 'MEDIA', 'BAIXA'])
-  priority: 'ALTA' | 'MEDIA' | 'BAIXA';
+  @IsEnum(TaskPriority)
+  priority: TaskPriority;
 
   @IsDateString()
   dueDate: Date;
