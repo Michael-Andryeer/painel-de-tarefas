@@ -1,14 +1,7 @@
 "use client";
 
-import { format } from "date-fns";
-import React from "react";
 import { Task } from "../types"; // Importando o tipo centralizado
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
 interface TasklistProps {
@@ -18,18 +11,11 @@ interface TasklistProps {
   onCompleteTask: (taskId: string) => void;
 }
 
-const Tasklist: React.FC<TasklistProps> = ({
-  tasks,
-  onEditTask,
-  onDeleteTask,
-  onCompleteTask,
-}) => {
+const Tasklist: React.FC<TasklistProps> = ({ tasks, onEditTask, onDeleteTask, onCompleteTask }) => {
   return (
     <div className="py-4 space-y-2">
       {tasks.length === 0 ? (
-        <div className="text-center text-gray-500 mt-6">
-          Nenhuma tarefa encontrada
-        </div>
+        <div className="text-center text-gray-500 mt-6">Nenhuma tarefa encontrada</div>
       ) : (
         <table className="w-full border-collapse">
           <thead>
@@ -47,18 +33,10 @@ const Tasklist: React.FC<TasklistProps> = ({
                 <td className="p-2">
                   <div>
                     <h3 className="font-semibold">{task.title}</h3>
-                    {task.description && (
-                      <p className="text-sm text-gray-500">
-                        {task.description}
-                      </p>
-                    )}
+                    {task.description && <p className="text-sm text-gray-500">{task.description}</p>}
                   </div>
                 </td>
-                <td className="p-2">
-                  {task.dueDate
-                    ? format(new Date(task.dueDate), "dd/MM/yyyy")
-                    : "Sem Data"}
-                </td>
+                <td className="p-2">{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "Sem Data"}</td>
                 <td className="p-2">{task.priority}</td>
                 <td className="p-2">{task.status}</td>
                 <td className="p-2 text-right">
@@ -69,15 +47,9 @@ const Tasklist: React.FC<TasklistProps> = ({
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-white shadow-md border border-gray-200 rounded-md">
-                      <DropdownMenuItem onClick={() => onEditTask(task)}>
-                        Editar
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => onCompleteTask(task.id)}>
-                        Finalizar
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => onDeleteTask(task.id)}>
-                        Deletar
-                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onEditTask(task)}>Editar</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onCompleteTask(task.id)}>Finalizar</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onDeleteTask(task.id)}>Deletar</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </td>

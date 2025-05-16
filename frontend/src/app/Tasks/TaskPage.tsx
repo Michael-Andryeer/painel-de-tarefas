@@ -5,12 +5,15 @@ import axios from "axios";
 import { parseCookies } from "nookies";
 import FilterSession from "./Components/Filter";
 import Tasklist from "./Components/TaskList";
+import EditTaskModal from "./Components/EditTaskModal"; // Importando o modal de edição
 import { Task } from "./types";
 
 export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [statusFilter, setStatusFilter] = useState<"todas" | "concluídas" | "pendentes">("todas");
   const [priorityFilter, setPriorityFilter] = useState<"todas" | "baixa" | "média" | "alta" | "urgente">("todas");
+  const [editingTask, setEditingTask] = useState<Task | null>(null); // Variável de estado para a tarefa sendo editada
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false); // Controle do modal de edição
 
   const fetchTasks = async () => {
     try {
@@ -56,6 +59,8 @@ export default function TasksPage() {
       setTasks((prevTasks) =>
         prevTasks.map((task) => (task.id === updatedTask.id ? response.data : task))
       );
+      setIsEditModalOpen(false); // Fecha o modal após a edição
+      setEditingTask(null); // Limpa a tarefa sendo editada
     } catch (error) {
       console.error("Erro ao editar tarefa:", error);
     }
@@ -121,10 +126,24 @@ export default function TasksPage() {
       />
       <Tasklist
         tasks={filteredTasks}
-        onEditTask={handleEditTask}
+        onEditTask={(task) => {
+          setEditingTask(task); // Define a tarefa sendo editada
+          setIsEditModalOpen(true); // Abre o modal de edição
+        }}
         onDeleteTask={handleDeleteTask}
         onCompleteTask={handleCompleteTask}
       />
+      {editingTask && (
+        <EditTaskModal
+          task={editingTask}
+          open={isEditModalOpen}
+          onOpenChange={(open) => {
+            setIsEditModalOpen(open); // Atualiza o estado do modal
+            if (!open) setEditingTask(null); // Limpa a tarefa sendo editada ao fechar o modal
+          }}
+          onSave={handleEditTask}
+        />
+      )}
     </div>
   );
 }

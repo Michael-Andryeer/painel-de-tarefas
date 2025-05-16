@@ -2,16 +2,18 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 import { parseCookies } from "nookies";
 import FilterSession from "./Components/Filter";
 import Tasklist from "./Components/TaskList";
+import EditTaskModal from "./Components/EditTaskModal";
 import { Task } from "./types";
 
 export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [statusFilter, setStatusFilter] = useState<"todas" | "concluídas" | "pendentes">("todas");
   const [priorityFilter, setPriorityFilter] = useState<"todas" | "baixa" | "média" | "alta" | "urgente">("todas");
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -22,17 +24,6 @@ export default function TasksPage() {
           console.error("Token não encontrado nos cookies");
           return;
         }
-
-        // Decodificar o token para verificar informações do usuário
-        const decodedToken = jwtDecode(token);
-        const currentTime = Math.floor(Date.now() / 1000);
-
-        if (!decodedToken.exp || decodedToken.exp < currentTime) {
-          console.error("Token expirado ou inválido");
-          return;
-        }
-
-        const userId = decodedToken.sub;
 
         const response = await axios.get(`http://localhost:8000/tasks`, {
           headers: {
@@ -48,8 +39,63 @@ export default function TasksPage() {
     fetchTasks();
   }, []);
 
-  const handleAddTask = (newTask: any) => {
-    setTasks((prevTasks) => [...prevTasks, newTask]);
+  const handleEditTask = async (updatedTask: Task) => {
+    try {
+      const cookies = parseCookies();
+      const token = cookies["authFlowToken"];
+      const response = await axios.patch(
+        `http://localhost:8000/tasks/${updatedTask.id}`,
+        updatedTask,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task.id === updatedTask.id ? response.data : task))
+      );
+      setIsEditModalOpen(false);
+      setEditingTask(null);
+    } catch (error) {
+      console.error("Erro ao editar tarefa:", error);
+    }
+  };
+
+  const handleDeleteTask = async (taskId: string) => {
+    try {
+      const cookies = parseCookies();
+      const token = cookies["authFlowToken"];
+      await axios.delete(`http://localhost:8000/tasks/${taskId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+    } catch (error) {
+      console.error("Erro ao deletar tarefa:", error);
+    }
+  };
+
+  const handleCompleteTask = async (taskId: string) => {
+    try {
+      const cookies = parseCookies();
+      const token = cookies["authFlowToken"];
+      const response = await axios.patch(
+        `http://localhost:8000/tasks/${taskId}`,
+        { status: "CONCLUIDO" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task.id === taskId ? response.data : task))
+      );
+    } catch (error) {
+      console.error("Erro ao finalizar tarefa:", error);
+    }
   };
 
   const filteredTasks = tasks.filter((task) => {
@@ -68,13 +114,32 @@ export default function TasksPage() {
     <div className="p-4">
       <FilterSession
         tasks={filteredTasks}
-        onAddTask={handleAddTask}
+        onAddTask={(newTask) => setTasks((prevTasks) => [...prevTasks, newTask])}
         statusFilter={statusFilter}
         setStatusFilter={setStatusFilter}
         priorityFilter={priorityFilter}
         setPriorityFilter={setPriorityFilter}
       />
-      <Tasklist tasks={filteredTasks} />
+      <Tasklist
+        tasks={filteredTasks}
+        onEditTask={(task) => {
+          setEditingTask(task);
+          setIsEditModalOpen(true);
+        }}
+        onDeleteTask={handleDeleteTask}
+        onCompleteTask={handleCompleteTask}
+      />
+      {editingTask && (
+        <EditTaskModal
+          task={editingTask}
+          open={isEditModalOpen}
+          onOpenChange={(open) => {
+            setIsEditModalOpen(open);
+            if (!open) setEditingTask(null);
+          }}
+          onSave={handleEditTask}
+        />
+      )}
     </div>
   );
 }
