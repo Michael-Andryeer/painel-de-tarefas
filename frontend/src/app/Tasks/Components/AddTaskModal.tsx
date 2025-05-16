@@ -141,19 +141,19 @@ export default function CreateTaskModal({ onTaskAdd }: { onTaskAdd: (newTask: Ta
           />
           <Label htmlFor="priority">Prioridade</Label>
           <Select onValueChange={(value) => setPriority(value)}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Selecione a prioridade" />
-            </SelectTrigger>
-            <SelectContent className="bg-white text-black">
-              <SelectGroup>
-                <SelectLabel>Prioridades</SelectLabel>
-                <SelectItem value="URGENTE">Urgente</SelectItem>
-                <SelectItem value="ALTA">Alta</SelectItem>
-                <SelectItem value="MEDIA">Média</SelectItem>
-                <SelectItem value="BAIXA">Baixa</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="Selecione a prioridade" />
+  </SelectTrigger>
+  <SelectContent className="bg-white text-black">
+    <SelectGroup>
+      <SelectLabel>Prioridades</SelectLabel>
+      <SelectItem value="URGENTE">Urgente</SelectItem>
+      <SelectItem value="ALTA">Alta</SelectItem>
+      <SelectItem value="MÉDIA">Média</SelectItem>
+      <SelectItem value="BAIXA">Baixa</SelectItem>
+    </SelectGroup>
+  </SelectContent>
+</Select>
         </div>
         <DialogFooter className="mt-4 w-full">
           <Button

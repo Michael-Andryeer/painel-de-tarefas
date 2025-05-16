@@ -104,10 +104,10 @@ export default function TasksPage() {
       statusFilter === "todas" ||
       (statusFilter === "pendentes" && task.status === "PENDENTE") ||
       (statusFilter === "concluídas" && task.status === "CONCLUIDO");
-
+  
     const priorityMatch =
-      priorityFilter === "todas" || task.priority.toLowerCase() === priorityFilter;
-
+      priorityFilter === "todas" || task.priority.toLowerCase() === priorityFilter.toLowerCase();
+  
     return statusMatch && priorityMatch;
   });
 

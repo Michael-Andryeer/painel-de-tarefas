@@ -8,3 +8,5 @@ ajustar pequenos detalhes no backend.
 
 
 Quinta-feira de noite/sexta feira => implementar o frontend o mais rápido possivel.
+
+tenho que ajustar o problema de filtrar prioridade Média
