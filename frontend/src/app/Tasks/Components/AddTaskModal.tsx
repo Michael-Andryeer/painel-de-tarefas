@@ -149,7 +149,7 @@ export default function CreateTaskModal({ onTaskAdd }: { onTaskAdd: (newTask: Ta
       <SelectLabel>Prioridades</SelectLabel>
       <SelectItem value="URGENTE">Urgente</SelectItem>
       <SelectItem value="ALTA">Alta</SelectItem>
-      <SelectItem value="MÉDIA">Média</SelectItem>
+      <SelectItem value="MEDIA">Média</SelectItem>
       <SelectItem value="BAIXA">Baixa</SelectItem>
     </SelectGroup>
   </SelectContent>

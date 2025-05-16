@@ -18,7 +18,9 @@ interface FilterSessionProps {
   statusFilter: "todas" | "concluídas" | "pendentes";
   setStatusFilter: (value: "todas" | "concluídas" | "pendentes") => void;
   priorityFilter: "todas" | "baixa" | "média" | "alta" | "urgente";
-  setPriorityFilter: (value: "todas" | "baixa" | "média" | "alta" | "urgente") => void;
+  setPriorityFilter: (
+    value: "todas" | "baixa" | "média" | "alta" | "urgente"
+  ) => void;
 }
 
 export default function FilterSession({
@@ -42,14 +44,20 @@ export default function FilterSession({
               Status
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent className="bg-white text-black shadow-md border border-gray-200 rounded-md">
             <DropdownMenuRadioGroup
               value={statusFilter}
-              onValueChange={(value: string) => setStatusFilter(value as "todas" | "concluídas" | "pendentes")}
+              onValueChange={(value: string) =>
+                setStatusFilter(value as "todas" | "concluídas" | "pendentes")
+              }
             >
               <DropdownMenuRadioItem value="todas">Todas</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="pendentes">Pendentes</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="concluídas">Concluídas</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="pendentes">
+                Pendentes
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="concluídas">
+                Concluídas
+              </DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -61,16 +69,22 @@ export default function FilterSession({
               Prioridade
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent className="bg-white text-black shadow-md border border-gray-200 rounded-md">
             <DropdownMenuRadioGroup
               value={priorityFilter}
-              onValueChange={(value: string) => setPriorityFilter(value as "todas" | "baixa" | "média" | "alta" | "urgente")}
+              onValueChange={(value: string) =>
+                setPriorityFilter(
+                  value as "todas" | "baixa" | "média" | "alta" | "urgente"
+                )
+              }
             >
               <DropdownMenuRadioItem value="todas">Todas</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="baixa">Baixa</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="média">Média</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="alta">Alta</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="urgente">Urgente</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="urgente">
+                Urgente
+              </DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
