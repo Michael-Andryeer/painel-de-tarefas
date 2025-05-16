@@ -39,7 +39,7 @@ export default function TasksPage() {
   }, []);
 
   const handleAddTask = (newTask: Task) => {
-    setTasks((prevTasks) => [...prevTasks, newTask]);
+    setTasks((prevTasks) => [...prevTasks, newTask]); // Atualiza o estado com a nova tarefa
   };
 
   const filteredTasks = tasks.filter((task) => {
@@ -58,7 +58,7 @@ export default function TasksPage() {
     <div className="p-4">
       <FilterSession
         tasks={filteredTasks}
-        onAddTask={handleAddTask}
+        onAddTask={handleAddTask} // Passa a função para o componente FilterSession
         statusFilter={statusFilter}
         setStatusFilter={setStatusFilter}
         priorityFilter={priorityFilter}
