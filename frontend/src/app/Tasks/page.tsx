@@ -113,13 +113,12 @@ export default function TasksPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header estilizado */}
       <Header
         onLogout={() => {
           console.log("Usuário deslogado");
         }}
       />
-      <div className="p-4">
+      <div className="container mx-auto px-4 py-6">
         <FilterSession
           tasks={filteredTasks}
           onAddTask={(newTask) => setTasks((prevTasks) => [...prevTasks, newTask])}
