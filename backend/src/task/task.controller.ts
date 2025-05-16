@@ -9,6 +9,7 @@ import {
   HttpCode,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create.task.dto';
@@ -22,11 +23,17 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Get()
-  async getTasksByUserId(@Req() req): Promise<TaskResponseDto[]> {
-    const userId = req.user.id; // Obtém o userId do token JWT
-    return this.taskService.getTasksByUserId(userId);
-  }
+  async getTasksByUserId(
+    @Req() req,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+  ): Promise<{ tasks: TaskResponseDto[]; total: number }> {
+    const userId = req.user.id;
+    const pageNumber = parseInt(page, 10);
+    const limitNumber = parseInt(limit, 10);
 
+    return this.taskService.getTasksByUserId(userId, pageNumber, limitNumber);
+  }
   @Post()
   async createTask(
     @Req() req,

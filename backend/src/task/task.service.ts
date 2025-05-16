@@ -9,9 +9,27 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class TaskService {
-  async getTasksByUserId(userId: string): Promise<TaskResponseDto[]> {
-    const tasks = await prisma.task.findMany({ where: { userId } });
-    return tasks;
+  async getTasksByUserId(
+    userId: string,
+    page: number,
+    limit: number,
+  ): Promise<{ tasks: TaskResponseDto[]; total: number }> {
+    const skip = (page - 1) * limit;
+
+    // Busca as tarefas da página atual
+    const tasks = await prisma.task.findMany({
+      where: { userId },
+      skip,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    });
+
+    // Conta o número total de tarefas do usuário
+    const total = await prisma.task.count({
+      where: { userId },
+    });
+
+    return { tasks, total };
   }
 
   async createTask(

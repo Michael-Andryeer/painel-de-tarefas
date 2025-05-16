@@ -11,34 +11,50 @@ import { Task } from "./types";
 
 export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [statusFilter, setStatusFilter] = useState<"todas" | "concluídas" | "pendentes">("todas");
-  const [priorityFilter, setPriorityFilter] = useState<"todas" | "baixa" | "média" | "alta" | "urgente">("todas");
+  const [statusFilter, setStatusFilter] = useState<
+    "todas" | "concluídas" | "pendentes"
+  >("todas");
+  const [priorityFilter, setPriorityFilter] = useState<
+    "todas" | "baixa" | "média" | "alta" | "urgente"
+  >("todas");
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const cookies = parseCookies();
-        const token = cookies["authFlowToken"];
-        if (!token) {
-          console.error("Token não encontrado nos cookies");
-          return;
-        }
+  // Estados para paginação
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const limit = 10;
 
-        const response = await axios.get(`http://localhost:8000/tasks`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setTasks(response.data);
-      } catch (error) {
-        console.error("Erro ao buscar tarefas:", error);
+  const fetchTasks = async () => {
+    try {
+      const cookies = parseCookies();
+      const token = cookies["authFlowToken"];
+      if (!token) {
+        console.error("Token não encontrado nos cookies");
+        return;
       }
-    };
 
+      const response = await axios.get(`http://localhost:8000/tasks`, {
+        params: { page, limit },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const { tasks: newTasks, total } = response.data;
+
+      setTasks(newTasks || []);
+      setTotal(total);
+      setTotalPages(Math.ceil(total / limit));
+    } catch (error) {
+      console.error("Erro ao buscar tarefas:", error);
+    }
+  };
+
+  useEffect(() => {
     fetchTasks();
-  }, []);
+  }, [page]);
 
   const handleEditTask = async (updatedTask: Task) => {
     try {
@@ -54,7 +70,9 @@ export default function TasksPage() {
         }
       );
       setTasks((prevTasks) =>
-        prevTasks.map((task) => (task.id === updatedTask.id ? response.data : task))
+        prevTasks.map((task) =>
+          task.id === updatedTask.id ? response.data : task
+        )
       );
       setIsEditModalOpen(false);
       setEditingTask(null);
@@ -99,17 +117,20 @@ export default function TasksPage() {
     }
   };
 
-  const filteredTasks = tasks.filter((task) => {
-    const statusMatch =
-      statusFilter === "todas" ||
-      (statusFilter === "pendentes" && task.status === "PENDENTE") ||
-      (statusFilter === "concluídas" && task.status === "CONCLUIDO");
+  const filteredTasks = Array.isArray(tasks)
+    ? tasks.filter((task) => {
+        const statusMatch =
+          statusFilter === "todas" ||
+          (statusFilter === "pendentes" && task.status === "PENDENTE") ||
+          (statusFilter === "concluídas" && task.status === "CONCLUIDO");
 
-    const priorityMatch =
-      priorityFilter === "todas" || task.priority.toLowerCase() === priorityFilter.toLowerCase();
+        const priorityMatch =
+          priorityFilter === "todas" ||
+          task.priority.toLowerCase() === priorityFilter.toLowerCase();
 
-    return statusMatch && priorityMatch;
-  });
+        return statusMatch && priorityMatch;
+      })
+    : [];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -119,9 +140,14 @@ export default function TasksPage() {
         }}
       />
       <div className="container mx-auto px-4 py-6">
+        <h1 className="text-xl font-bold mb-4">Tarefas ({total})</h1>{" "}
+        {/* Exibe o total de tarefas */}
         <FilterSession
           tasks={filteredTasks}
-          onAddTask={(newTask) => setTasks((prevTasks) => [...prevTasks, newTask])}
+          onAddTask={(newTask) => {
+            setTasks((prevTasks) => [...prevTasks, newTask]);
+            setTotal((prevTotal) => prevTotal + 1);
+          }}
           statusFilter={statusFilter}
           setStatusFilter={setStatusFilter}
           priorityFilter={priorityFilter}
@@ -137,6 +163,27 @@ export default function TasksPage() {
             onDeleteTask={handleDeleteTask}
             onCompleteTask={handleCompleteTask}
           />
+        </div>
+        <div className="flex justify-center items-center mt-4">
+          <button
+            onClick={() => setPage((prevPage) => Math.max(prevPage - 1, 1))}
+            disabled={page === 1}
+            className="px-4 py-2 bg-gray-300 text-black rounded disabled:opacity-50"
+          >
+            Anterior
+          </button>
+          <span className="mx-4">
+            Página {page} de {totalPages} ({total} tarefas no total)
+          </span>
+          <button
+            onClick={() =>
+              setPage((prevPage) => Math.min(prevPage + 1, totalPages))
+            }
+            disabled={page === totalPages}
+            className="px-4 py-2 bg-gray-300 text-black rounded disabled:opacity-50"
+          >
+            Próxima
+          </button>
         </div>
         {editingTask && (
           <EditTaskModal

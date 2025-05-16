@@ -24,7 +24,6 @@ interface FilterSessionProps {
 }
 
 export default function FilterSession({
-  tasks,
   onAddTask,
   statusFilter,
   setStatusFilter,
@@ -33,9 +32,6 @@ export default function FilterSession({
 }: FilterSessionProps) {
   return (
     <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2">
-      <h2 className="text-xl font-semibold">
-        {tasks.length} {tasks.length === 1 ? "Tarefa" : "Tarefas"}
-      </h2>
       <div className="flex items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
