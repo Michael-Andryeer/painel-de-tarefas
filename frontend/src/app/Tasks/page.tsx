@@ -104,10 +104,10 @@ export default function TasksPage() {
       statusFilter === "todas" ||
       (statusFilter === "pendentes" && task.status === "PENDENTE") ||
       (statusFilter === "concluídas" && task.status === "CONCLUIDO");
-  
+
     const priorityMatch =
       priorityFilter === "todas" || task.priority.toLowerCase() === priorityFilter.toLowerCase();
-  
+
     return statusMatch && priorityMatch;
   });
 
@@ -127,15 +127,17 @@ export default function TasksPage() {
           priorityFilter={priorityFilter}
           setPriorityFilter={setPriorityFilter}
         />
-        <Tasklist
-          tasks={filteredTasks}
-          onEditTask={(task) => {
-            setEditingTask(task);
-            setIsEditModalOpen(true);
-          }}
-          onDeleteTask={handleDeleteTask}
-          onCompleteTask={handleCompleteTask}
-        />
+        <div className="overflow-x-auto">
+          <Tasklist
+            tasks={filteredTasks}
+            onEditTask={(task) => {
+              setEditingTask(task);
+              setIsEditModalOpen(true);
+            }}
+            onDeleteTask={handleDeleteTask}
+            onCompleteTask={handleCompleteTask}
+          />
+        </div>
         {editingTask && (
           <EditTaskModal
             task={editingTask}
