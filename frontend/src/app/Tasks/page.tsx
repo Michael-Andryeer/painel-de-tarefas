@@ -6,6 +6,7 @@ import { parseCookies } from "nookies";
 import FilterSession from "./Components/Filter";
 import Tasklist from "./Components/TaskList";
 import EditTaskModal from "./Components/EditTaskModal";
+import Header from "./Components/Header";
 import { Task } from "./types";
 
 export default function TasksPage() {
@@ -111,35 +112,43 @@ export default function TasksPage() {
   });
 
   return (
-    <div className="p-4">
-      <FilterSession
-        tasks={filteredTasks}
-        onAddTask={(newTask) => setTasks((prevTasks) => [...prevTasks, newTask])}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
-        priorityFilter={priorityFilter}
-        setPriorityFilter={setPriorityFilter}
-      />
-      <Tasklist
-        tasks={filteredTasks}
-        onEditTask={(task) => {
-          setEditingTask(task);
-          setIsEditModalOpen(true);
+    <div className="min-h-screen bg-gray-50">
+      {/* Header estilizado */}
+      <Header
+        onLogout={() => {
+          console.log("Usuário deslogado");
         }}
-        onDeleteTask={handleDeleteTask}
-        onCompleteTask={handleCompleteTask}
       />
-      {editingTask && (
-        <EditTaskModal
-          task={editingTask}
-          open={isEditModalOpen}
-          onOpenChange={(open) => {
-            setIsEditModalOpen(open);
-            if (!open) setEditingTask(null);
-          }}
-          onSave={handleEditTask}
+      <div className="p-4">
+        <FilterSession
+          tasks={filteredTasks}
+          onAddTask={(newTask) => setTasks((prevTasks) => [...prevTasks, newTask])}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+          priorityFilter={priorityFilter}
+          setPriorityFilter={setPriorityFilter}
         />
-      )}
+        <Tasklist
+          tasks={filteredTasks}
+          onEditTask={(task) => {
+            setEditingTask(task);
+            setIsEditModalOpen(true);
+          }}
+          onDeleteTask={handleDeleteTask}
+          onCompleteTask={handleCompleteTask}
+        />
+        {editingTask && (
+          <EditTaskModal
+            task={editingTask}
+            open={isEditModalOpen}
+            onOpenChange={(open) => {
+              setIsEditModalOpen(open);
+              if (!open) setEditingTask(null);
+            }}
+            onSave={handleEditTask}
+          />
+        )}
+      </div>
     </div>
   );
 }

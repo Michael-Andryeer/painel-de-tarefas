@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import axios from "axios";
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
-import path from "path";
 
 export default function AuthPage() {
   const [activeTab, setActiveTab] = useState("login");
