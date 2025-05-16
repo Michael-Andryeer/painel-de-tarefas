@@ -42,7 +42,6 @@ export default function AuthPage() {
 
   const handleLogin = async () => {
     if (!validateLogin()) {
-      // Exibir toast para os campos que estão faltando
       if (!loginEmail) toast.error("O campo de email é obrigatório.");
       if (!loginPassword) toast.error("O campo de senha é obrigatório.");
       return;
@@ -53,16 +52,21 @@ export default function AuthPage() {
         email: loginEmail,
         password: loginPassword,
       });
-      const { token, message } = response.data;
+  
+      const { access_token, message } = response.data; 
+  
+      if (!access_token) {
+        toast.error("Erro ao realizar login. Token não recebido.");
+        return;
+      }
   
       if (message === "Usuario nao encontrado") {
-        setErrors({ email: "Usuário não encontrado" });
         toast.error("Usuário não encontrado");
         return;
       }
   
-      setCookie(undefined, "authFlowToken", token, {
-        maxAge: 60 * 60 * 1, // 1 hora
+      setCookie(undefined, "authFlowToken", access_token, {
+        maxAge: 60 * 60 * 1, 
       });
       toast.success("Login realizado com sucesso!");
       router.push("/tasks");
