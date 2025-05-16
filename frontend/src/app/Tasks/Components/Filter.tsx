@@ -80,7 +80,7 @@ export default function FilterSession({
             >
               <DropdownMenuRadioItem value="todas">Todas</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="baixa">Baixa</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="média">Média</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="media">Média</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="alta">Alta</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="urgente">
                 Urgente
