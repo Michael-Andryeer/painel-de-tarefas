@@ -129,12 +129,14 @@ export default function AuthPage() {
     <AuroraBackground>
       <div className="flex items-center justify-center h-screen">
         <CardContainer>
-          <CardBody className="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
+          <CardBody className="bg-white border border-gray-200 rounded-xl p-6">
             <div className="flex justify-around mb-4">
               <CardItem
                 as="button"
                 translateZ={20}
-                className={`px-4 py-2 ${activeTab === "login" ? "font-bold border-b-2 border-blue-500" : ""}`}
+                className={`px-4 py-2 ${
+                  activeTab === "login" ? "font-bold border-b-2 border-blue-500" : ""
+                }`}
                 onClick={() => {
                   setActiveTab("login");
                   setErrors({});
@@ -145,7 +147,9 @@ export default function AuthPage() {
               <CardItem
                 as="button"
                 translateZ={20}
-                className={`px-4 py-2 ${activeTab === "register" ? "font-bold border-b-2 border-blue-500" : ""}`}
+                className={`px-4 py-2 ${
+                  activeTab === "register" ? "font-bold border-b-2 border-blue-500" : ""
+                }`}
                 onClick={() => {
                   setActiveTab("register");
                   setErrors({});
@@ -154,12 +158,14 @@ export default function AuthPage() {
                 Cadastro
               </CardItem>
             </div>
-
+  
             {activeTab === "login" && (
               <div>
                 <h2 className="text-center text-xl font-bold mb-4">Login</h2>
                 <div className="mb-4">
-                  <label htmlFor="loginEmail" className="block mb-1">Email</label>
+                  <label htmlFor="loginEmail" className="block mb-1">
+                    Email
+                  </label>
                   <input
                     id="loginEmail"
                     type="email"
@@ -170,7 +176,9 @@ export default function AuthPage() {
                   />
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="loginPassword" className="block mb-1">Senha</label>
+                  <label htmlFor="loginPassword" className="block mb-1">
+                    Senha
+                  </label>
                   <input
                     id="loginPassword"
                     type="password"
@@ -190,12 +198,14 @@ export default function AuthPage() {
                 </CardItem>
               </div>
             )}
-
+  
             {activeTab === "register" && (
               <div>
                 <h2 className="text-center text-xl font-bold mb-4">Cadastro</h2>
                 <div className="mb-4">
-                  <label htmlFor="registerName" className="block mb-1">Nome</label>
+                  <label htmlFor="registerName" className="block mb-1">
+                    Nome
+                  </label>
                   <input
                     id="registerName"
                     type="text"
@@ -206,7 +216,9 @@ export default function AuthPage() {
                   />
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="registerEmail" className="block mb-1">Email</label>
+                  <label htmlFor="registerEmail" className="block mb-1">
+                    Email
+                  </label>
                   <input
                     id="registerEmail"
                     type="email"
@@ -217,7 +229,9 @@ export default function AuthPage() {
                   />
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="registerPassword" className="block mb-1">Senha</label>
+                  <label htmlFor="registerPassword" className="block mb-1">
+                    Senha
+                  </label>
                   <input
                     id="registerPassword"
                     type="password"
@@ -241,5 +255,5 @@ export default function AuthPage() {
         </CardContainer>
       </div>
     </AuroraBackground>
-  );
+  )
 }
