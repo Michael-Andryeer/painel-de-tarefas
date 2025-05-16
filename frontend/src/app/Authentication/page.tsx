@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import axios from "axios";
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
+import path from "path";
 
 export default function AuthPage() {
   const [activeTab, setActiveTab] = useState("login");
@@ -67,9 +68,10 @@ export default function AuthPage() {
   
       setCookie(undefined, "authFlowToken", access_token, {
         maxAge: 60 * 60 * 1, 
+        path: "/",
       });
       toast.success("Login realizado com sucesso!");
-      router.push("/tasks");
+      router.push("/Tasks");
     } catch (error) {
       console.error("Erro ao fazer login: ", error);
       toast.error("Erro ao realizar login. Tente novamente.");

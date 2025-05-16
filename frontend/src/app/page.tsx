@@ -1,7 +1,19 @@
-import AuthPage from "./Authentication/page";
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  return (
-      <AuthPage />
-  )
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("authFlowToken");
+    if (!token) {
+      router.push("/Authentication");
+    } else {
+      router.push("/Tasks");
+    }
+  }, [router]);
+
+  return null;
 }

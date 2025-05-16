@@ -11,9 +11,6 @@ const prisma = new PrismaClient();
 export class TaskService {
   async getTasksByUserId(userId: string): Promise<TaskResponseDto[]> {
     const tasks = await prisma.task.findMany({ where: { userId } });
-    if (!tasks || tasks.length === 0) {
-      throw new NotFoundException('Este usuário não possui tarefas.');
-    }
     return tasks;
   }
 
