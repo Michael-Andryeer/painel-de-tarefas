@@ -1,8 +1,10 @@
+import type { TaskStatus } from '@prisma/client';
+
 export class TaskResponseDto {
   id: string;
   title: string;
   description: string;
-  status: 'PENDENTE' | 'CONCLUIDO';
+  status: TaskStatus;
   priority: 'ALTA' | 'MEDIA' | 'BAIXA' | 'URGENTE';
   dueDate: Date;
   createdAt: Date;
