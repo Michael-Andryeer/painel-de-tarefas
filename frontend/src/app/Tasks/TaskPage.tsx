@@ -34,12 +34,67 @@ export default function TasksPage() {
 
   useEffect(() => {
     fetchTasks();
-    const interval = setInterval(fetchTasks, 5000);
-    return () => clearInterval(interval);
   }, []);
 
   const handleAddTask = (newTask: Task) => {
-    setTasks((prevTasks) => [...prevTasks, newTask]); // Atualiza o estado com a nova tarefa
+    setTasks((prevTasks) => [...prevTasks, newTask]);
+  };
+
+  const handleEditTask = async (updatedTask: Task) => {
+    try {
+      const cookies = parseCookies();
+      const token = cookies["authFlowToken"];
+      const response = await axios.patch(
+        `http://localhost:8000/tasks/${updatedTask.id}`,
+        updatedTask,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task.id === updatedTask.id ? response.data : task))
+      );
+    } catch (error) {
+      console.error("Erro ao editar tarefa:", error);
+    }
+  };
+
+  const handleDeleteTask = async (taskId: string) => {
+    try {
+      const cookies = parseCookies();
+      const token = cookies["authFlowToken"];
+      await axios.delete(`http://localhost:8000/tasks/${taskId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+    } catch (error) {
+      console.error("Erro ao deletar tarefa:", error);
+    }
+  };
+
+  const handleCompleteTask = async (taskId: string) => {
+    try {
+      const cookies = parseCookies();
+      const token = cookies["authFlowToken"];
+      const response = await axios.patch(
+        `http://localhost:8000/tasks/${taskId}`,
+        { status: "CONCLUIDO" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task.id === taskId ? response.data : task))
+      );
+    } catch (error) {
+      console.error("Erro ao finalizar tarefa:", error);
+    }
   };
 
   const filteredTasks = tasks.filter((task) => {
@@ -58,13 +113,18 @@ export default function TasksPage() {
     <div className="p-4">
       <FilterSession
         tasks={filteredTasks}
-        onAddTask={handleAddTask} // Passa a função para o componente FilterSession
+        onAddTask={handleAddTask}
         statusFilter={statusFilter}
         setStatusFilter={setStatusFilter}
         priorityFilter={priorityFilter}
         setPriorityFilter={setPriorityFilter}
       />
-      <Tasklist tasks={filteredTasks} />
+      <Tasklist
+        tasks={filteredTasks}
+        onEditTask={handleEditTask}
+        onDeleteTask={handleDeleteTask}
+        onCompleteTask={handleCompleteTask}
+      />
     </div>
   );
 }
