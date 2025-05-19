@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import { parseCookies } from "nookies";
 import FilterSession from "./Components/Filter";
@@ -10,6 +11,7 @@ import Header from "./Components/Header";
 import { Task } from "./types";
 
 export default function TasksPage() {
+  const router = useRouter(); 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [statusFilter, setStatusFilter] = useState<
     "todas" | "concluídas" | "pendentes"
@@ -20,11 +22,20 @@ export default function TasksPage() {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
-  // Estados para paginação
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const limit = 10;
+
+  useEffect(() => {
+    const cookies = parseCookies();
+    const token = cookies["authFlowToken"];
+
+    if (!token) {
+      console.error("Token não encontrado nos cookies. Redirecionando...");
+      router.push("/Authentication");
+    }
+  }, [router]); 
 
   const fetchTasks = async () => {
     try {

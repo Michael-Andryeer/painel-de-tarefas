@@ -19,7 +19,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
 import { parseCookies } from "nookies";
-import { Task } from "../types"; // Importando o tipo centralizado
+import { Task } from "../types"; 
 
 export default function CreateTaskModal({ onTaskAdd }: { onTaskAdd: (newTask: Task) => void }) {
   const [title, setTitle] = useState<string>("");

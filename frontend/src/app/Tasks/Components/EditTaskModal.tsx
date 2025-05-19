@@ -24,17 +24,14 @@ export default function EditTaskModal({ task, open, onOpenChange, onSave }: Task
   const [error, setError] = useState<string | null>(null);
 
   const handleDateChange = (value: string) => {
-    // Remove caracteres não numéricos
     const formattedValue = value.replace(/\D/g, "");
 
-    // Adiciona as barras automaticamente
     const dateWithSlashes = formattedValue
       .replace(/^(\d{2})(\d)/, "$1/$2")
       .replace(/^(\d{2}\/\d{2})(\d)/, "$1/$2");
 
     setDueDate(dateWithSlashes);
 
-    // Validação de formato
     if (dateWithSlashes.length === 10) {
       const [day, month, year] = dateWithSlashes.split("/").map(Number);
       const isValidDate =
@@ -105,7 +102,7 @@ export default function EditTaskModal({ task, open, onOpenChange, onSave }: Task
                 placeholder="dd/mm/yyyy"
                 value={dueDate}
                 onChange={(e) => handleDateChange(e.target.value)}
-                maxLength={10} // Limita a entrada a 10 caracteres
+                maxLength={10}
               />
               {error && <p className="text-red-500 text-sm">{error}</p>}
             </div>
