@@ -10,7 +10,7 @@ export default function Header({ onLogout }: HeaderProps) {
 
   const handleLogout = () => {
     onLogout();
-    router.push("/Authentication"); // Redireciona para a página de autenticação
+    router.push("/Authentication");
   };
 
   return (

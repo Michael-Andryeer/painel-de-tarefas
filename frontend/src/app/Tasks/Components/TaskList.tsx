@@ -1,6 +1,6 @@
 "use client";
 
-import { Task } from "../types"; // Importando o tipo centralizado
+import { Task } from "../types"; 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 

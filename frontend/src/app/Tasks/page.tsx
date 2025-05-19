@@ -101,7 +101,16 @@ export default function TasksPage() {
           Authorization: `Bearer ${token}`,
         },
       });
+  
       setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+  
+      setTotal((prevTotal) => {
+        const newTotal = prevTotal - 1;
+  
+        setTotalPages(Math.ceil(newTotal / limit));
+  
+        return newTotal;
+      });
     } catch (error) {
       console.error("Erro ao deletar tarefa:", error);
     }

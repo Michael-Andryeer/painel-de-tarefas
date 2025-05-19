@@ -16,7 +16,6 @@ export class TaskService {
   ): Promise<{ tasks: TaskResponseDto[]; total: number }> {
     const skip = (page - 1) * limit;
 
-    // Busca as tarefas da página atual
     const tasks = await prisma.task.findMany({
       where: { userId },
       skip,
@@ -24,7 +23,6 @@ export class TaskService {
       orderBy: { createdAt: 'desc' },
     });
 
-    // Conta o número total de tarefas do usuário
     const total = await prisma.task.count({
       where: { userId },
     });
