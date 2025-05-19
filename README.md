@@ -42,8 +42,6 @@ Crie um arquivo `.env` na raiz da pasta `backend` com o seguinte conteúdo:
 DATABASE_URL=postgresql://postgres:postgres@localhost:5433/mydb
 JWT_SECRET=your_jwt_secret
 PORT=8000
-GOOGLE_CLIENT_ID=901170548931-i02arlc1m6g1a2bp2ik0tna7453ub2ra.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=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
 BACKEND_URL=http://localhost:8000
 ```
 
