@@ -1,4 +1,4 @@
-export type TaskPriority = "URGENTE" | "ALTA" | "MÉDIA" | "BAIXA";
+export type TaskPriority = "URGENTE" | "ALTA" | "MEDIA" | "BAIXA";
 export type TaskStatus = "PENDENTE" | "CONCLUIDO";
 
 export interface Task {

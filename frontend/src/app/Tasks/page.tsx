@@ -7,20 +7,22 @@ import { parseCookies } from "nookies";
 import FilterSession from "./Components/Filter";
 import Tasklist from "./Components/TaskList";
 import EditTaskModal from "./Components/EditTaskModal";
+import CreateTaskModal from "./Components/AddTaskModal"; // Import do modal de criação
 import Header from "./Components/Header";
 import { Task } from "./types";
 
 export default function TasksPage() {
-  const router = useRouter(); 
+  const router = useRouter();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [statusFilter, setStatusFilter] = useState<
     "todas" | "concluídas" | "pendentes"
   >("todas");
   const [priorityFilter, setPriorityFilter] = useState<
-    "todas" | "baixa" | "média" | "alta" | "urgente"
+    "todas" | "baixa" | "media" | "alta" | "urgente"
   >("todas");
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false); // Estado para o modal de criação
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -35,7 +37,7 @@ export default function TasksPage() {
       console.error("Token não encontrado nos cookies. Redirecionando...");
       router.push("/Authentication");
     }
-  }, [router]); 
+  }, [router]);
 
   const fetchTasks = async () => {
     try {
@@ -101,14 +103,14 @@ export default function TasksPage() {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
-  
+
       setTotal((prevTotal) => {
         const newTotal = prevTotal - 1;
-  
+
         setTotalPages(Math.ceil(newTotal / limit));
-  
+
         return newTotal;
       });
     } catch (error) {
@@ -152,6 +154,11 @@ export default function TasksPage() {
       })
     : [];
 
+  const handleAddTask = (newTask: Task) => {
+    setTasks((prevTasks) => [...prevTasks, newTask]);
+    setTotal((prevTotal) => prevTotal + 1);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header
@@ -160,14 +167,18 @@ export default function TasksPage() {
         }}
       />
       <div className="container mx-auto px-4 py-6">
-        <h1 className="text-xl font-bold mb-4">Tarefas ({total})</h1>{" "}
-        {/* Exibe o total de tarefas */}
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-xl font-bold">Tarefas ({total})</h1>
+          <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md"
+          >
+            Adicionar Tarefa
+          </button>
+        </div>
         <FilterSession
           tasks={filteredTasks}
-          onAddTask={(newTask) => {
-            setTasks((prevTasks) => [...prevTasks, newTask]);
-            setTotal((prevTotal) => prevTotal + 1);
-          }}
+          onAddTask={handleAddTask}
           statusFilter={statusFilter}
           setStatusFilter={setStatusFilter}
           priorityFilter={priorityFilter}
@@ -216,6 +227,11 @@ export default function TasksPage() {
             onSave={handleEditTask}
           />
         )}
+        <CreateTaskModal
+          onTaskAdd={handleAddTask}
+          open={isCreateModalOpen}
+          onOpenChange={setIsCreateModalOpen}
+        />
       </div>
     </div>
   );
