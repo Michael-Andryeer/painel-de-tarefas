@@ -3,24 +3,23 @@ import {
   UnauthorizedException,
   ConflictException,
 } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-
-const prisma = new PrismaClient();
-
+import { PrismaService } from '../../prisma/prisma.service';
 @Injectable()
 export class AuthService {
+  constructor(private prisma: PrismaService) {}
+
   async register(data: RegisterDto) {
-    const userExists = await prisma.user.findUnique({
+    const userExists = await this.prisma.user.findUnique({
       where: { email: data.email },
     });
     if (userExists) throw new ConflictException('Email já cadastrado');
 
     const hashedPassword = await bcrypt.hash(data.password, 10);
-    const user = await prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {
         email: data.email,
         name: data.name,
@@ -31,7 +30,9 @@ export class AuthService {
   }
 
   async login(data: LoginDto) {
-    const user = await prisma.user.findUnique({ where: { email: data.email } });
+    const user = await this.prisma.user.findUnique({
+      where: { email: data.email },
+    });
     if (!user) throw new UnauthorizedException('Credenciais inválidas');
 
     const valid = await bcrypt.compare(data.password, user.password);
